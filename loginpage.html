@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dozo Stays — Login & Signup</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      background: #fbf9f8;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left {
+      position: relative;
+      background: #c7d92c;
+      width: 50%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 64px 56px;
+      overflow: hidden;
+    }
+
+    .left::before {
+      content: '';
+      position: absolute;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      filter: blur(32px);
+      top: -80px; left: -80px;
+      pointer-events: none;
+    }
+
+    .logo {
+      position: relative;
+      font-size: 18px;
+      font-weight: 700;
+      color: #434b00;
+      letter-spacing: -0.45px;
+      line-height: 1.6;
+      z-index: 1;
+    }
+
+    .headline {
+      position: relative;
+      z-index: 1;
+      margin-top: 40px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(40px, 4vw, 64px);
+      line-height: 1.25;
+      color: #5a6400;
+      max-width: 480px;
+    }
+
+    /* card stack */
+    .card-stack {
+      position: relative;
+      height: 260px;
+      margin: 20px 0;
+      z-index: 1;
+    }
+
+    .card {
+      position: absolute;
+      width: 200px;
+      background: #f6f4e8;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 20px -2px rgba(27,28,28,.1);
+    }
+
+    .card img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .card-name {
+      font-size: 14px;
+      color: #1b1c1c;
+      margin-top: 10px;
+      line-height: 22px;
+    }
+
+    .card-price {
+      font-size: 14px;
+      color: #434b00;
+      line-height: 22px;
+    }
+
+    .card-1 { left: 0;    top: 0;   transform: rotate(-6deg); }
+    .card-2 { left: 50%;  top: 10px; transform: translateX(-50%) rotate(2deg); z-index: 2; }
+    .card-3 { right: 0;   top: 0;   transform: rotate(8deg); }
+
+    /* social proof */
+    .social-proof {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .avatars {
+      display: flex;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 2px solid #c7d92c;
+      overflow: hidden;
+      margin-left: -12px;
+      background: #e0e0e0;
+    }
+
+    .avatar:first-child { margin-left: 0; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .proof-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #5a6400;
+      line-height: 24px;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .right {
+      width: 50%;
+      background: #fbf9f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+    }
+
+    .form-wrap {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .form-header h2 {
+      font-size: 32px;
+      font-weight: 600;
+      color: #1b1c1c;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .form-header p {
+      font-size: 16px;
+      color: #474839;
+      line-height: 24px;
+    }
+
+    /* tab switcher */
+    .tab-switcher {
+      background: #f6f4e8;
+      border-radius: 9999px;
+      padding: 4px;
+      display: flex;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 9999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      background: transparent;
+      color: #474839;
+      transition: background .2s, color .2s, box-shadow .2s;
+      line-height: 24px;
+    }
+
+    .tab-btn.active {
+      background: #c7d92c;
+      color: #434b00;
+      box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+
+    /* fields */
+    .fields {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 16px;
+      color: #474839;
+      line-height: 24px;
+    }
+
+    .field input {
+      border: 1px solid #c8c8b4;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      color: #1b1c1c;
+      background: #fff;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+    }
+
+    .field input::placeholder { color: #6b7280; }
+    .field input:focus { border-color: #c7d92c; }
+
+    .phone-row {
+      display: flex;
+      align-items: center;
+      border: 1px solid #c8c8b4;
+      border-radius: 12px;
+      background: #fff;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+
+    .phone-row:focus-within { border-color: #c7d92c; }
+
+    .phone-prefix {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 12px 16px 16px;
+      flex-shrink: 0;
+    }
+
+    .phone-prefix .flag { font-size: 18px; }
+
+    .phone-divider {
+      border-right: 1px solid #c8c8b4;
+      padding-right: 10px;
+      font-size: 16px;
+      color: #1b1c1c;
+      line-height: 24px;
+    }
+
+    .phone-input {
+      flex: 1;
+      border: none !important;
+      border-radius: 0 !important;
+      padding: 16px 16px 16px 12px !important;
+      background: transparent !important;
+    }
+
+    .phone-input:focus { border-color: transparent !important; }
+
+    /* CTA button */
+    .btn-cta {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #c7d92c 0%, #ffc29a 100%);
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      line-height: 24px;
+      transition: opacity .2s;
+    }
+
+    .btn-cta:hover { opacity: .9; }
+
+    /* divider */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .or-divider .line {
+      flex: 1;
+      height: 1px;
+      background: #c8c8b4;
+    }
+
+    .or-divider span {
+      padding: 0 16px;
+      font-size: 16px;
+      color: #474839;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    /* Google button */
+    .btn-google {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #c8c8b4;
+      border-radius: 9999px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px -2px rgba(27,28,28,.05);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      color: #1b1c1c;
+      line-height: 24px;
+      transition: background .2s;
+    }
+
+    .btn-google:hover { background: #f9f9f9; }
+
+    .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* footer */
+    .form-footer {
+      text-align: center;
+      font-size: 16px;
+      color: #474839;
+      line-height: 26px;
+    }
+
+    .form-footer a {
+      color: #434b00;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* signup-only fields hidden by default */
+    .signup-only { display: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+
+      .left, .right {
+        width: 100%;
+        min-height: unset;
+      }
+
+      .left { padding: 32px 24px 40px; }
+
+      .card-stack { height: 220px; }
+      .card { width: 160px; }
+      .card img { height: 104px; }
+
+      .right { padding: 40px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .headline { font-size: 34px; }
+      .card-stack { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LEFT PANEL ── -->
+  <section class="left">
+    <div class="logo">Dozo Stays</div>
+
+    <div class="headline">Your new home is just a step away.</div>
+
+    <div class="card-stack">
+      <!-- Card 1 -->
+      <div class="card card-1">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80" alt="The Urban Oasis" />
+        <p class="card-name">The Urban Oasis</p>
+        <p class="card-price">₹8,500/mo</p>
+      </div>
+      <!-- Card 3 (right, behind) -->
+      <div class="card card-3">
+        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&q=80" alt="Skyline Studio" />
+        <p class="card-name">Skyline Studio</p>
+        <p class="card-price">₹15,000/mo</p>
+      </div>
+      <!-- Card 2 (center, front) -->
+      <div class="card card-2">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80" alt="Zen Heights" />
+        <p class="card-name">Zen Heights</p>
+        <p class="card-price">₹12,200/mo</p>
+      </div>
+    </div>
+
+    <div class="social-proof">
+      <div class="avatars">
+        <div class="avatar"><img src="https://i.pravatar.cc/80?img=47" alt="" /></div>
+        <div class="avatar"><img src="https://i.pravatar.cc/80?img=32" alt="" /></div>
+        <div class="avatar"><img src="https://i.pravatar.cc/80?img=15" alt="" /></div>
+        <div class="avatar"><img src="https://i.pravatar.cc/80?img=62" alt="" /></div>
+      </div>
+      <span class="proof-text">2,000+ verified residents</span>
+    </div>
+  </section>
+
+  <!-- ── RIGHT PANEL ── -->
+  <section class="right">
+    <div class="form-wrap">
+
+      <div class="form-header">
+        <h2>Welcome to Dozo Stays</h2>
+        <p id="subheading">Sign in to manage your bookings and stay.</p>
+      </div>
+
+      <!-- Tab switcher -->
+      <div class="tab-switcher" role="tablist">
+        <button class="tab-btn active" id="tab-signin" role="tab" onclick="switchTab('signin')">Sign In</button>
+        <button class="tab-btn"        id="tab-signup" role="tab" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Form fields -->
+      <div class="fields">
+
+        <!-- Sign Up only -->
+        <div class="field signup-only" id="field-name">
+          <label for="full-name">Full Name</label>
+          <input type="text" id="full-name" placeholder="Enter your full name" />
+        </div>
+
+        <div class="field signup-only" id="field-email">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" />
+        </div>
+
+        <!-- Mobile -->
+        <div class="field">
+          <label for="mobile">Mobile Number</label>
+          <div class="phone-row">
+            <div class="phone-prefix">
+              <span class="flag">🇮🇳</span>
+              <span class="phone-divider">+91</span>
+            </div>
+            <input type="tel" id="mobile" class="phone-input" placeholder="Enter mobile number" maxlength="10" />
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <button class="btn-cta" id="cta-btn" onclick="handleSubmit()">SEND OTP</button>
+
+        <!-- OR divider -->
+        <div class="or-divider">
+          <div class="line"></div>
+          <span>OR CONTINUE WITH</span>
+          <div class="line"></div>
+        </div>
+
+        <!-- Google -->
+        <button class="btn-google" onclick="handleGoogle()">
+          <!-- Google G logo -->
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            <path fill="none" d="M0 0h48v48H0z"/>
+          </svg>
+          Continue with Google
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        By continuing you agree to our
+        <a href="#">Terms of Service</a> &amp;
+        <a href="#">Privacy Policy</a>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    let currentTab = 'signin';
+
+    function switchTab(tab) {
+      currentTab = tab;
+
+      // Update tab buttons
+      document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+
+      // Show / hide signup fields
+      document.querySelectorAll('.signup-only').forEach(el => {
+        el.style.display = tab === 'signup' ? 'flex' : 'none';
+      });
+
+      // Update subheading
+      document.getElementById('subheading').textContent =
+        tab === 'signin'
+          ? 'Sign in to manage your bookings and stay.'
+          : 'Create your account to get started.';
+
+      // Update CTA
+      document.getElementById('cta-btn').textContent =
+        tab === 'signin' ? 'SEND OTP' : 'CREATE ACCOUNT';
+    }
+
+    function handleSubmit() {
+      const mobile = document.getElementById('mobile').value.trim();
+
+      if (!mobile || mobile.length < 10) {
+        shake(document.querySelector('.phone-row'));
+        return;
+      }
+
+      if (currentTab === 'signup') {
+        const name  = document.getElementById('full-name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        if (!name)  { shake(document.getElementById('full-name')); return; }
+        if (!email) { shake(document.getElementById('email'));     return; }
+      }
+
+      const btn = document.getElementById('cta-btn');
+      btn.textContent = currentTab === 'signin' ? 'OTP SENT ✓' : 'ACCOUNT CREATED ✓';
+      btn.style.background = 'linear-gradient(135deg, #8faa00 0%, #e8a070 100%)';
+      setTimeout(() => {
+        btn.textContent = currentTab === 'signin' ? 'SEND OTP' : 'CREATE ACCOUNT';
+        btn.style.background = '';
+      }, 2500);
+    }
+
+    function handleGoogle() {
+      const btn = document.querySelector('.btn-google');
+      btn.textContent = 'Redirecting…';
+      setTimeout(() => { btn.innerHTML = '<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg> Continue with Google'; }, 1500);
+    }
+
+    // Shake animation for validation
+    function shake(el) {
+      el.style.transition = 'transform .07s';
+      let count = 0;
+      const directions = [4, -4, 4, -4, 0];
+      const interval = setInterval(() => {
+        el.style.transform = `translateX(${directions[count]}px)`;
+        if (++count >= directions.length) {
+          clearInterval(interval);
+          el.style.transform = '';
+          // Flash red border
+          el.style.borderColor = '#ef4444';
+          setTimeout(() => { el.style.borderColor = ''; }, 600);
+        }
+      }, 70);
+    }
+
+    // Mobile input: digits only
+    document.getElementById('mobile').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+  </script>
+</body>
+</html>

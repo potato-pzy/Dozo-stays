@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+
+@keyframes menu-day-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.menu-day-progress {
+  transform-origin: left;
+  animation: menu-day-progress 6s linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-day-progress {
+    animation: none;
+  }
+}
+
+*, *::before, *::after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img {
+  image-rendering: high-quality;
+}
+
+@font-face {
+  font-family: "Playfair Display:Italic";
+  font-style: italic;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/PlayfairDisplay-Italic_wght__1") format("woff2");
+}
+
+@font-face {
+  font-family: "Playfair Display:Regular";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/PlayfairDisplay_wght__1") format("woff2");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans:Bold";
+  font-style: normal;
+  font-weight: 700;
+  src: url("https://static.figma.com/font/PlusJakartaSans_wght__2") format("woff2");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans:Italic";
+  font-style: italic;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/PlusJakartaSans-Italic_wght__2") format("woff2");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans:Regular";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/PlusJakartaSans_wght__2") format("woff2");
+}
